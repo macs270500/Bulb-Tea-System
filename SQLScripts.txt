@@ -1,0 +1,224 @@
+Database Tables Creation including Stored Procedures and Triggers.
+
+--Create Tables
+Create Table Stock_Management(
+ProductID  VARCHAR(10),
+ProductName VARCHAR(15) ,
+ProductPrice VARCHAR(10),
+ProductQty VARCHAR(10),
+HasToRestock VARCHAR(3) Default 'No',
+DateModified Date Default GETDATE(),
+Primary Key (ProductID)
+);
+
+create table owner (
+OwnerID  VARCHAR(10) PRIMARY KEY,
+OwnerName CHAR(50),
+OwnerPhone VARCHAR(25),
+Password VARCHAR(10)
+);
+
+create table transactions (
+ProductID VARCHAR(10) foreign key references Stock_Management(ProductID),
+used int,
+);
+
+Create Table Employees (
+EmpID char(5) Primary Key,
+EmpFName varchar(25) not null,
+EmpLName varchar(25) not null,
+EmpAddress varchar(60) not null,
+EmpPhone int not null,
+EmpSalary int,
+Password VARCHAR(10)
+);
+
+create table supplier (
+SupID  VARCHAR(10)  PRIMARY KEY,
+SupName CHAR(50),
+SupPhone CHAR(10),
+SupMail VARCHAR(25),
+SupAddress VARCHAR(25),
+City  CHAR(10),
+State Char(10),
+ZipCode VARCHAR(10) );
+
+--Inserting values into the table
+Insert into Stock_Management(ProductID,ProductName,ProductPrice,ProductQty) values('0001','FruitTea(Syrup)','¥ 200','100');
+Insert into Stock_Management(ProductID,ProductName,ProductPrice,ProductQty) values('0002','MilkTea(Powder)','¥ 200','100');
+Insert into Stock_Management(ProductID,ProductName,ProductPrice,ProductQty) values('0003','GreenTea','¥ 150','100');
+Insert into Stock_Management(ProductID,ProductName,ProductPrice,ProductQty) values('0004','BlackTea','¥ 180','100');
+Insert into Stock_Management(ProductID,ProductName,ProductPrice,ProductQty) values('0005','Poppings','¥ 100','100');
+Insert into Stock_Management(ProductID,ProductName,ProductPrice,ProductQty) values('0006','Jellies','¥ 100','49');
+Insert into Stock_Management(ProductID,ProductName,ProductPrice,ProductQty) values('0007','Tapioca','¥ 200','150');
+
+Insert into owner values ('0001','Golam Hassen Mutasim','57701537','MG006');
+Insert into owner values ('0002','Golam Hassen Muhaisin','57630834','MG007');
+
+insert into transactions values ('0001',40);
+insert into transactions values ('0002',35);
+insert into transactions values ('0003',35);
+insert into transactions values ('0004',35);
+insert into transactions values ('0005',50);
+insert into transactions values ('0006',50);
+insert into transactions values ('0007',50);
+
+Insert Into Employees Values('BT001','Shiyah','Kaudeer','Velvindron Road, Port Louis',59637452,0,'SM0002')
+Insert Into Employees Values('BT002','Tameem','Mohamed',' Rue Poive, Port Louis',58527593,0,'SL0001')
+Insert Into Employees Values('BT003','Careem','Abdool',' Maillard, Port Louis',57584201,0,'SM0001')
+Insert Into Employees Values('BT004','Sheik','Joomun',' Gentilly Road, Moka',59285498,0,'SL0002')
+Insert Into Employees Values('BT005','Saad','Mirza',' Hassan Rafta Street, Phoenix',58526492,0,'SM0003')
+Insert Into Employees Values('BT006','Zubir','Al-Mattur','Edward Hugues Street, Curepipe',57520321,0,'SL0003')
+
+Insert into supplier values ('001','Xian Yuhui','00765432','xian@gmail.com','52 Maple St','China','Tianjin','121000');
+Insert into supplier values ('002','Hunan Shing','00756123','hunan@gmail.com','53 Mango St','China','Shanghai','132000');
+Insert into supplier values ('003','Wenzhou Yung','00742487','yung@gmail.com','55 Apple St','China','Xinjiang','146000');
+
+
+--Procedures
+create procedure SP_StockManagement @prodName Varchar(10),@prodQty varchar(10)
+as
+begin
+update Stock_Management
+SET ProductQty = @prodQty
+Where ProductName = @prodName
+update Stock_Management
+set HasToRestock = 'No'
+Where ProductName = @prodName
+END
+--
+Create procedure SalesDeduct @PID as int 
+as 
+declare salesCursor cursor
+for select ProductID from Stock_Management
+open salesCursor
+declare @ID VARCHAR(10)
+fetch next from salesCursor into @ID
+while(@@FETCH_STATUS = 0)
+begin
+if (@ID = @PID)
+ begin
+ update Stock_Management
+ set ProductQty = ProductQty - 1 where @ID = ProductID
+ end
+   fetch next from salesCursor into @ID
+ end
+ close salesCursor
+ deallocate salesCursor
+--
+	Create procedure UpdateTransactions
+(
+   @Qty as int,
+   @ID as varchar(4)
+   
+)
+as
+begin
+update transactions 
+set used = used + @Qty 
+where ProductID = @ID
+end
+--
+--Creating procedure
+Create Procedure SP_CheckStockLevel
+as
+BEGIN
+--Declaring Cursor
+declare chkStock_Cursor cursor
+FOR SELECT ProductID, ProductQty,HasToRestock from Stock_Management
+declare @productID varchar(10)
+declare @productQty varchar(10)
+declare @hasToRestock varchar(3)
+--Opening cursor
+open chkStock_Cursor
+FETCH NEXT FROM chkStock_Cursor into @productID,@productQty,@hasToRestock
+
+WHILE(@@FETCH_STATUS = 0)
+BEGIN
+declare @limit INT
+set @limit = 50
+--Checking if limit has been reached
+if (@limit>@productQty)
+  begin
+  --Updating HasToRestock column if product has reached limit
+	Update Stock_Management
+	set HasToRestock = 'Yes'
+	where ProductID = @productID and ProductQty<50
+  end
+--Taking data from the next row
+FETCH NEXT FROM chkStock_Cursor into @productID,@productQty,@hasToRestock
+END
+--Closing cursor
+CLOSE chkStock_Cursor
+Deallocate chkStock_Cursor
+End
+
+
+--Triggers
+--Creating Trigger
+Create trigger Restock
+on Stock_Management
+after update
+as
+begin
+declare Purchase_cursor cursor
+for select ProductID ,HasToRestock,ProductQty from Stock_Management
+open Purchase_cursor
+declare @HTR varchar(3)
+declare @PID varchar(10)
+declare @PQty varchar(10)
+fetch next from Purchase_cursor into @PID ,@HTR,@PQty
+while(@@FETCH_STATUS = 0)
+begin
+if (@HTR = 'Yes' and @PQty>=50)
+begin
+SELECT @PID as ProductID, ProductName as ProductName, 
+'The ' + ProductName + ' has been restocked having a Total Quantity of ' + ProductQty as Message
+FROM Stock_Management
+where ProductID = @PID
+update Stock_Management
+set HasToRestock = 'No'
+Where HasToRestock = 'Yes' and ProductID = @PID 
+end
+fetch next from Purchase_cursor into @PID ,@HTR,@PQty
+end
+close Purchase_cursor
+deallocate Purchase_cursor
+END
+GO
+--
+Create trigger DeductAlert
+on transactions
+after update
+as
+begin
+declare @ProdID  VARCHAR(10);
+select @ProdID = ProductID from transactions where used >98
+exec SalesDeduct @PID = @ProdID
+select @ProdID as [Product ID] , 'The product with the ID '+@ProdID+ ' reached limit salesDeduct Executed' as [Message]
+update transactions
+set used = used-100
+where used > 99
+END 
+GO 
+--
+--Creating a trigger
+CREATE TRIGGER StockDateModified
+ON Stock_Management 
+FOR UPDATE 
+AS 
+BEGIN 
+Declare @date Date
+SET @date = GETDATE()
+--Displaying Product that are low in stock
+SELECT ProductID, ProductName, ProductQty, 
+'There is only ' + ProductQty +' ' + ProductName + ' left'  as 'Warning'
+FROM Stock_Management 
+WHERE ProductQty < 50 
+--Updating DATE to show when it is modified
+UPDATE Stock_Management
+SET Stock_Management.DateModified = @date
+WHERE HasToRestock = 'Yes'	
+END 
+GO 
+
