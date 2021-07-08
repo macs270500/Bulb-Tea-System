@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Bulb_Tea_System
@@ -54,7 +47,7 @@ namespace Bulb_Tea_System
                 myreader = cmd.ExecuteReader();
                 while (myreader.Read())
                 {
-                    string prevTotal = (string)myreader["EmpSalary"].ToString();
+                    string prevTotal = myreader["EmpSalary"].ToString();
                     txtprevsal.Text = prevTotal;
                 }
             }
@@ -117,7 +110,7 @@ namespace Bulb_Tea_System
             else if (HoursWork.Hours < 0)
             {
                 MessageBox.Show("Invalid Time Input!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                this.Close();
+                Close();
             }
 
             salary = 0;
@@ -141,13 +134,13 @@ namespace Bulb_Tea_System
                 {
                     Login_System login = new Login_System();
                     login.Show();
-                    this.Close();
+                    Close();
                 }
                 else
                 {
                     Main_Menu menu = new Main_Menu();
                     menu.Show();
-                    this.Close();
+                    Close();
                 }
             }
         }
@@ -168,11 +161,11 @@ namespace Bulb_Tea_System
                 txtprevsal.Clear();
                 txtsalary.Clear();
                 txttotalsal.Clear();
-            }            
+            }
         }
 
         private void btnView_Click(object sender, EventArgs e)
-        {            
+        {
             datagrid frm = new datagrid();
             frm.ShowDialog();
         }

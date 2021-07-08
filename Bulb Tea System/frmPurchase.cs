@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Bulb_Tea_System
@@ -18,15 +12,15 @@ namespace Bulb_Tea_System
             InitializeComponent();
         }
         clsDataGridDataSource sqlCommand = new clsDataGridDataSource();
-        
+
         private void btnConfirm_Click(object sender, EventArgs e)
         {
             DataTable DT = new DataTable();
             for (int i = 0; i < lviOrder.Items.Count; i++)
-            {                
+            {
                 string prodName = lviOrder.Items[i].SubItems[2].Text;
                 string prodQty = lviOrder.Items[i].SubItems[3].Text;
-                string SQLstr = $"Select ProductQty From Stock_Management Where ProductName = '{prodName}'";                
+                string SQLstr = $"Select ProductQty From Stock_Management Where ProductName = '{prodName}'";
                 DT = sqlCommand.SqlDataTable(SQLstr);
                 string prodQuantity = DT.Rows[0]["ProductQty"].ToString();
                 int totalQty = int.Parse(prodQty) + int.Parse(prodQuantity);
@@ -54,7 +48,9 @@ namespace Bulb_Tea_System
         private void btnAdd_Click(object sender, EventArgs e)
         {
             if (comboSup.Text != "")
+            {
                 if (txtProdName.Text != "")
+                {
                     if (TxtQty.Text != "")
                     {
                         ListViewItem lvi = new ListViewItem(comboSup.Text);
@@ -65,6 +61,8 @@ namespace Bulb_Tea_System
                         txtProdName.Clear();
                         TxtQty.Clear();
                     }
+                }
+            }
         }
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
@@ -106,13 +104,13 @@ namespace Bulb_Tea_System
             {
                 Login_System login = new Login_System();
                 login.Show();
-                this.Close();
+                Close();
             }
             else
             {
                 Main_Menu menu = new Main_Menu();
                 menu.Show();
-                this.Close();
+                Close();
             }
         }
     }

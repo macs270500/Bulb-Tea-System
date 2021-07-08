@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Bulb_Tea_System
@@ -16,7 +10,7 @@ namespace Bulb_Tea_System
         clsDataGridDataSource dataSource = new clsDataGridDataSource();
         public Form1()
         {
-            InitializeComponent();            
+            InitializeComponent();
         }
         public static ListView lvi = new ListView();
         int price = 0;
@@ -40,7 +34,7 @@ namespace Bulb_Tea_System
             SqlDataAdapter sda = new SqlDataAdapter(sqlStr, dataSource.connStr);
             sda.Fill(dt);
             sda.Dispose();
-            char c = Char.Parse(" ");
+            char c = char.Parse(" ");
             ; for (int i = 0; i < 2; i++)
             {
                 comboBox1.Items.Add(dt.Rows[i]["ProductName"].ToString().TrimEnd(c));
@@ -172,7 +166,7 @@ namespace Bulb_Tea_System
             }
 
 
-            
+
             txtPrice.Text = total.ToString();
             string[] sp = new string[4];
             sp[0] = comboBox1.Text.ToString();
@@ -246,7 +240,7 @@ namespace Bulb_Tea_System
         string SqlStr = "SELECT * FROM Transactions";
         private void btnPrint_Click(object sender, EventArgs e)
         {
-            
+
             if (txtPaid.Text == "")
             {
                 errorProvider3.SetError(txtPaid, "Enter Amount paid");
@@ -261,7 +255,7 @@ namespace Bulb_Tea_System
                     {
 
                         string SQLStr = $"Select productQty from Stock_Management Where ProductID = '{DT.Rows[i]["ProductID"]}'";
-                        
+
                         DataTable dT = new DataTable();
                         dT = dataSource.SqlDataTable(SQLStr);
                         string prodQty = dT.Rows[0].ToString();
@@ -301,7 +295,7 @@ namespace Bulb_Tea_System
 
         }
 
-        
+
 
         private void checkedListBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -330,13 +324,13 @@ namespace Bulb_Tea_System
             {
                 Login_System login = new Login_System();
                 login.Show();
-                this.Close();
+                Close();
             }
             else
             {
                 Main_Menu menu = new Main_Menu();
                 menu.Show();
-                this.Close();
+                Close();
             }
         }
     }

@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Bulb_Tea_System
@@ -25,12 +18,12 @@ namespace Bulb_Tea_System
             string SqlStr = "SELECT ProductId, ProductName, ProductPrice,ProductQty " +
                 "FROM Stock_Management " +
                 "WHERE HasToRestock = 'Yes'";
-            RestockDataGridView.DataSource = DataSource.SqlDataTable(SqlStr);            
+            RestockDataGridView.DataSource = DataSource.SqlDataTable(SqlStr);
         }
 
         private void btnBack_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

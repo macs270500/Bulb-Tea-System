@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Drawing.Text;
 
 namespace Bulb_Tea_System
 {
@@ -24,7 +16,7 @@ namespace Bulb_Tea_System
         private void btnExit_Click(object sender, EventArgs e)
         {
             Login_System login = new Login_System();
-            this.Close();
+            Close();
             login.ShowDialog();
         }
 
@@ -36,7 +28,7 @@ namespace Bulb_Tea_System
                 BtnPurchase.Visible = false;
                 BtnStock.Visible = false;
                 frmSales.Employee = true;
-            }            
+            }
             else if (Department.StartsWith("SM"))
             {
                 BtnPayroll.Visible = false;
@@ -44,32 +36,32 @@ namespace Bulb_Tea_System
                 stock.Employee = true;
                 purchase.Employee = true;
             }
-            
+
 
         }
 
         private void BtnStock_Click(object sender, EventArgs e)
         {
             stock.Show();
-            this.Close();
+            Close();
         }
 
         private void BtnPayroll_Click(object sender, EventArgs e)
         {
             payRoll.Show();
-            this.Close();
+            Close();
         }
 
         private void BtnSales_Click(object sender, EventArgs e)
         {
             frmSales.Show();
-            this.Close();
+            Close();
         }
 
         private void BtnPurchase_Click(object sender, EventArgs e)
         {
             purchase.Show();
-            this.Close();
+            Close();
         }
     }
 }

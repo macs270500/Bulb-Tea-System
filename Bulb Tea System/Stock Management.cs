@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Bulb_Tea_System
@@ -32,23 +26,23 @@ namespace Bulb_Tea_System
             {
                 Login_System login = new Login_System();
                 login.Show();
-                this.Close();
+                Close();
             }
             else
             {
                 Main_Menu menu = new Main_Menu();
                 menu.Show();
-                this.Close();
+                Close();
             }
         }
 
         private void frmStockManagement_Load(object sender, EventArgs e)
         {
             string SqlStr = "EXEC SP_CheckStockLevel";
-            DataSource.SqlCommandExecution(SqlStr);            
+            DataSource.SqlCommandExecution(SqlStr);
             LoadToolTip();
             UpdateDatatable();
-            UpdateTextBoxes();            
+            UpdateTextBoxes();
         }
         private void UpdateDatatable()
         {
@@ -57,7 +51,7 @@ namespace Bulb_Tea_System
         }
         private void UpdateTextBoxes()
         {
-            
+
             txtProdID.Text = dt.Rows[rowIndex]["ProductID"].ToString();
             txtProdName.Text = dt.Rows[rowIndex]["ProductName"].ToString();
             txtProdPrice.Text = dt.Rows[rowIndex]["ProductPrice"].ToString();

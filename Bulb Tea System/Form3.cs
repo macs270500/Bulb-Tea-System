@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Bulb_Tea_System
@@ -16,13 +9,13 @@ namespace Bulb_Tea_System
         public string Bas;
         public string fav
         {
-            get { return Flavour; }
-            set { Flavour = value; }
+            get => Flavour;
+            set => Flavour = value;
         }
         public string bas
         {
-            get { return Bas; }
-            set { Bas = value; }
+            get => Bas;
+            set => Bas = value;
         }
         public Form3()
         {

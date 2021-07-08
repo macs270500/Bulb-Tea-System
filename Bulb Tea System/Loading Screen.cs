@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Bulb_Tea_System
@@ -26,16 +19,16 @@ namespace Bulb_Tea_System
                 timer1.Stop();
 
                 frmMainMenu.Show();
-                this.Close();
+                Close();
             }
         }
         public void btnSelection(string department)
         {
             frmMainMenu.ButtonSelection(department);
-        } 
-        
-        
+        }
 
-        
+
+
+
     }
 }
